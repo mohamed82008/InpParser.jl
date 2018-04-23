@@ -17,7 +17,8 @@ This package reads the content of an ABAQUS inp file into native Julia data stru
 4. Concentrated loads on nodes
 5. Loads on faces
 6. Zero and non-zero Dirichlet boundary conditions on nodes and/or faces
-
+7. Cell sets
+8. Node sets
 
 ## Installation
 
