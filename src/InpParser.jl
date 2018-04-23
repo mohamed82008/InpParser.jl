@@ -29,9 +29,6 @@ include("extract_dload.jl")
 function import_inp(filepath_with_ext)
     file = open(filepath_with_ext, "r")
     
-    current_node_set = ""
-    current_element_set = ""
-
     local node_coords
     local celltype, cells, offset
     nodesets = Dict{String,Vector{Int}}()
@@ -102,6 +99,8 @@ function import_inp(filepath_with_ext)
         end
     end
 
+    close(file)
+    
     return InpContent(node_coords, celltype, cells, nodesets, cellsets, E, mu, nodedbcs, cloads, facesets, dloads)
 end
 
