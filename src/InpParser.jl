@@ -12,6 +12,7 @@ struct InpContent{dim, TF, N, TI}
     cellsets::Dict{String,Vector{TI}}
     E::TF
     mu::TF
+    density::TF
     nodedbcs::Dict{String, Vector{Tuple{TI,TF}}}
     cloads::Dict{Int, Vector{TF}}
     facesets::Dict{String, Vector{Tuple{TI,TI}}}
@@ -38,6 +39,7 @@ function import_inp(filepath_with_ext)
     cloads = Dict{Int, Vector{Float64}}()
     facesets = Dict{String, Vector{Tuple{Int,Int}}}()
     dloads = Dict{String, Float64}()
+    density = 0. # Should extract from the file
 
     node_heading_pattern = r"\*Node,\s?NSET=([^,]*)"
     cell_heading_pattern = r"\*Element,\s?TYPE=([^,]*), ELSET=([^,]*)"
@@ -101,7 +103,7 @@ function import_inp(filepath_with_ext)
 
     close(file)
 
-    return InpContent(node_coords, celltype, cells, nodesets, cellsets, E, mu, nodedbcs, cloads, facesets, dloads)
+    return InpContent(node_coords, celltype, cells, nodesets, cellsets, E, mu, density, nodedbcs, cloads, facesets, dloads)
 end
 
 end
