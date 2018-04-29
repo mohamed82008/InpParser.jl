@@ -1,6 +1,6 @@
 module InpParser
 
-export import_inp
+export import_inp, InpContent
 
 using JuAFEM
 
@@ -39,8 +39,8 @@ function import_inp(filepath_with_ext)
     facesets = Dict{String, Vector{Tuple{Int,Int}}}()
     dloads = Dict{String, Float64}()
 
-    node_heading_pattern = r"\*Node, NSET=([^,]*)"
-    cell_heading_pattern = r"\*Element, TYPE=([^,]*), ELSET=([^,]*)"
+    node_heading_pattern = r"\*Node,\s?NSET=([^,]*)"
+    cell_heading_pattern = r"\*Element,\s?TYPE=([^,]*), ELSET=([^,]*)"
     nodeset_heading_pattern = r"\*NSET,\s?NSET=([^,]*)"
     cellset_heading_pattern = r"\*ELSET,\s?ELSET=([^,]*)"
     material_heading_pattern = r"\*MATERIAL,\s?NAME=([^\s]*)"
@@ -94,13 +94,13 @@ function import_inp(filepath_with_ext)
         end
         m = match(dload_heading_pattern, line)
         if m != nothing
-            extract_dload!(dloads, facesets, file, Val{dim})
+            extract_dload!(dloads, facesets, file, Val{dim}, offset)
             continue
         end
     end
 
     close(file)
-    
+
     return InpContent(node_coords, celltype, cells, nodesets, cellsets, E, mu, nodedbcs, cloads, facesets, dloads)
 end
 
