@@ -7,9 +7,11 @@ function extract_dload!(dloads::Dict{String, TF}, facesets::Dict{String, Vector{
 
     first = true
     prevload = zero(TF)
-    line = readline(file)
     local load
-    while !contains(line, "*"^59)
+    
+    line = readline(file)
+    m = match(stopping_pattern, line)
+    while m isa Void
         m = match(dload_heading_pattern, line)
         if m != nothing
             dloads[faceset_name] = load
@@ -32,8 +34,9 @@ function extract_dload!(dloads::Dict{String, TF}, facesets::Dict{String, Vector{
             push!(facesets[faceset_name], (cellidx, faceidx))
         end
         line = readline(file)
+        m = match(stopping_pattern, line)
     end
     dloads[faceset_name] = load
 
-    return 
+    return line
 end

@@ -1,12 +1,12 @@
 function extract_set!(sets::Dict{String, TV}, setname::AbstractString, file, offset=0) where {TI, TV<:AbstractVector{TI}}
-    line = readline(file)
-
     sets[setname] = Int[]
     vector = sets[setname]
     
-    pattern_single = r"(\d*),"
-    pattern_subset = r"([^,]*),?"
-    while line != ""
+    pattern_single = r"^(\d*),"
+    pattern_subset = r"^([^,]*),?"
+    line = readline(file)
+    m = match(stopping_pattern, line)
+    while m isa Void
         m = match(pattern_single, line)
         if m != nothing
             push!(vector, parse(TI, m[1])-offset)
@@ -20,6 +20,7 @@ function extract_set!(sets::Dict{String, TV}, setname::AbstractString, file, off
             end
         end
         line = readline(file)
+        m = match(stopping_pattern, line)
     end
-    return 
+    return line
 end

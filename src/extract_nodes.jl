@@ -9,12 +9,12 @@ function extract_nodes(file, ::Type{TF}=Float64, ::Type{TI}=Int) where {TF, TI}
 
     if m[4] isa Void
         node_coords = [(parse(TF, m[2]), parse(TF, m[3]))]
-        _extract_nodes!(node_coords, file, TI(1))
+        nextline = _extract_nodes!(node_coords, file, TI(1))
     else
         node_coords = [(parse(TF, m[2]), parse(TF, m[3]), parse(TF, m[5]))]
-        _extract_nodes!(node_coords, file, TI(1))
+        nextline = _extract_nodes!(node_coords, file, TI(1))
     end
-    return node_coords
+    return node_coords, nextline
 end
 
 function _extract_nodes!(node_coords::AbstractVector{NTuple{dim, TF}}, file, prev_node_idx::TI) where {dim, TF, TI}
@@ -27,17 +27,21 @@ function _extract_nodes!(node_coords::AbstractVector{NTuple{dim, TF}}, file, pre
     end
 
     line = readline(file)
-    while line != ""
+    m = match(stopping_pattern, line)
+    while m isa Void
         m = match(pattern, line)
-        node_idx = parse(Int, m[1])
-        node_idx == prev_node_idx + TI(1) || throw("Node indices are not consecutive.")
-        if dim === 2
-            push!(node_coords, (parse(TF, m[2]), parse(TF, m[3])))
-        else
-            push!(node_coords, (parse(TF, m[2]), parse(TF, m[3]), parse(TF, m[4])))
+        if m != nothing
+            node_idx = parse(Int, m[1])
+            node_idx == prev_node_idx + TI(1) || throw("Node indices are not consecutive.")
+            if dim === 2
+                push!(node_coords, (parse(TF, m[2]), parse(TF, m[3])))
+            else
+                push!(node_coords, (parse(TF, m[2]), parse(TF, m[3]), parse(TF, m[4])))
+            end
+            prev_node_idx = node_idx
         end
-        prev_node_idx = node_idx
         line = readline(file)
+        m = match(stopping_pattern, line)
     end
-    return 
+    return line
 end

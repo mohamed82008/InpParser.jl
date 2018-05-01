@@ -3,7 +3,8 @@ function extract_nodedbcs!(node_dbcs::Dict{String, Vector{Tuple{TI,TF}}}, file) 
     pattern_range = r"([^,]*),(\d),(\d)"
     pattern_other = r"([^,]*),(\d),(\d),(\-?\d*\.\d*)"
     line = readline(file)
-    while line != ""
+    m = match(stopping_pattern, line)
+    while m isa Void
         m = match(pattern_other, line)
         if m != nothing
             nodesetname = m[1]
@@ -21,6 +22,7 @@ function extract_nodedbcs!(node_dbcs::Dict{String, Vector{Tuple{TI,TF}}}, file) 
                 end
             end
             line = readline(file)
+            m = match(stopping_pattern, line)
             continue
         end
         m = match(pattern_range, line)
@@ -39,6 +41,7 @@ function extract_nodedbcs!(node_dbcs::Dict{String, Vector{Tuple{TI,TF}}}, file) 
                 end
             end
             line = readline(file)
+            m = match(stopping_pattern, line)
             continue
         end
         m = match(pattern_zero, line)
@@ -51,8 +54,11 @@ function extract_nodedbcs!(node_dbcs::Dict{String, Vector{Tuple{TI,TF}}}, file) 
                 node_dbcs[nodesetname] = [(dof, zero(TF))]
             end
             line = readline(file)
+            m = match(stopping_pattern, line)
             continue
         end
+        line = readline(file)
+        m = match(stopping_pattern, line)
     end
-    return 
+    return line
 end

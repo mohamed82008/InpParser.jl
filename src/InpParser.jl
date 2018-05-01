@@ -27,6 +27,8 @@ include("extract_dbcs.jl")
 include("extract_cload.jl")
 include("extract_dload.jl")
 
+const stopping_pattern = r"^\*[^\*]"
+
 function import_inp(filepath_with_ext)
     file = open(filepath_with_ext, "r")
     
@@ -50,11 +52,11 @@ function import_inp(filepath_with_ext)
     cload_heading_pattern = r"\*CLOAD"
     dload_heading_pattern = r"\*DLOAD"
 
+    line = readline(file)
     while !eof(file)
-        line = readline(file)
         m = match(node_heading_pattern, line)
         if m != nothing && m[1] == "Nall"
-            node_coords = extract_nodes(file)
+            node_coords, line = extract_nodes(file)
             dim = length(node_coords[1])
             continue
         end
@@ -62,43 +64,44 @@ function import_inp(filepath_with_ext)
         if m != nothing
             celltype = String(m[1])
             cellsetname = String(m[2]) 
-            cells, offset = extract_cells(file)
+            cells, offset, line = extract_cells(file)
             cellsets[cellsetname] = collect(1:length(cells))
             continue
         end
         m = match(nodeset_heading_pattern, line)
         if m != nothing
             nodesetname = String(m[1])
-            extract_set!(nodesets, nodesetname, file)
+            line = extract_set!(nodesets, nodesetname, file)
             continue
         end
         m = match(cellset_heading_pattern, line)
         if m != nothing
             cellsetname = String(m[1])
-            extract_set!(cellsets, cellsetname, file, offset)
+            line = extract_set!(cellsets, cellsetname, file, offset)
             continue
         end
         m = match(material_heading_pattern, line)
         if m != nothing
             material_name = String(m[1])
-            E, mu = extract_material(file)
+            E, mu, line = extract_material(file)
             continue
         end
         m = match(boundary_heading_pattern, line)
         if m != nothing
-            extract_nodedbcs!(nodedbcs, file)
+            line = extract_nodedbcs!(nodedbcs, file)
             continue
         end
         m = match(cload_heading_pattern, line)
         if m != nothing
-            extract_cload!(cloads, file, Val{dim})
+            line = extract_cload!(cloads, file, Val{dim})
             continue
         end
         m = match(dload_heading_pattern, line)
         if m != nothing
-            extract_dload!(dloads, facesets, file, Val{dim}, offset)
+            line = extract_dload!(dloads, facesets, file, Val{dim}, offset)
             continue
         end
+        line = readline(file)
     end
 
     close(file)
