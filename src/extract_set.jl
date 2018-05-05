@@ -2,8 +2,8 @@ function extract_set!(sets::Dict{String, TV}, setname::AbstractString, file, off
     sets[setname] = Int[]
     vector = sets[setname]
     
-    pattern_single = r"^(\d*),"
-    pattern_subset = r"^([^,]*),?"
+    pattern_single = r"^(\d+)"
+    pattern_subset = r"^([^,]+)"
     line = readline(file)
     m = match(stopping_pattern, line)
     while m isa Void

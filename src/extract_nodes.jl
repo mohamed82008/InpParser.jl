@@ -1,7 +1,7 @@
 function extract_nodes(file, ::Type{TF}=Float64, ::Type{TI}=Int) where {TF, TI}
     line = readline(file)
 
-    pattern = r"(\d*),\s(-?\d*\.?\d*),\s(-?\d*\.?\d*)(,\s(-?\d*\.?\d*))?"
+    pattern = r"(\d+)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*(,\s*(-?\d+\.?\d*))?"
     m = match(pattern, line)
     
     first_node_idx = parse(TI, m[1])
@@ -19,9 +19,9 @@ end
 
 function _extract_nodes!(node_coords::AbstractVector{NTuple{dim, TF}}, file, prev_node_idx::TI) where {dim, TF, TI}
     if dim === 2
-        pattern = r"(\d*),\s(-?\d*\.?\d*),\s(-?\d*\.?\d*)"
+        pattern = r"(\d+)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)"
     elseif dim === 3
-        pattern = r"(\d*),\s(-?\d*\.?\d*),\s(-?\d*\.?\d*),\s(-?\d*\.?\d*)"
+        pattern = r"(\d+)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)"
     else
         error("Dimension is not supported.")
     end

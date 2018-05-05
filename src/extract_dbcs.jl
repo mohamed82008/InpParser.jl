@@ -1,7 +1,7 @@
 function extract_nodedbcs!(node_dbcs::Dict{String, Vector{Tuple{TI,TF}}}, file) where {TI, TF}
-    pattern_zero = r"([^,]*),(\d)"
-    pattern_range = r"([^,]*),(\d),(\d)"
-    pattern_other = r"([^,]*),(\d),(\d),(\-?\d*\.\d*)"
+    pattern_zero = r"([^,]+)\s*,\s*(\d)"
+    pattern_range = r"([^,]+)\s*,\s*(\d)\s*,\s*(\d)"
+    pattern_other = r"([^,]+)\s*,\s*(\d)\s*,\s*(\d)\s*,\s*(\-?\d+\.\d*)"
     line = readline(file)
     m = match(stopping_pattern, line)
     while m isa Void

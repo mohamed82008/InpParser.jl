@@ -43,11 +43,11 @@ function import_inp(filepath_with_ext)
     dloads = Dict{String, Float64}()
     density = 0. # Should extract from the file
 
-    node_heading_pattern = r"\*Node,\s?NSET=([^,]*)"
-    cell_heading_pattern = r"\*Element,\s?TYPE=([^,]*), ELSET=([^,]*)"
-    nodeset_heading_pattern = r"\*NSET,\s?NSET=([^,]*)"
-    cellset_heading_pattern = r"\*ELSET,\s?ELSET=([^,]*)"
-    material_heading_pattern = r"\*MATERIAL,\s?NAME=([^\s]*)"
+    node_heading_pattern = r"\*Node\s*,\s*NSET\s*=\s*([^,]*)"
+    cell_heading_pattern = r"\*Element\s*,\s*TYPE\s*=\s*([^,]*)\s*,\s*ELSET\s*=\s*([^,]*)"
+    nodeset_heading_pattern = r"\*NSET\s*,\s*NSET\s*=\s*([^,]*)"
+    cellset_heading_pattern = r"\*ELSET\s*,\s*ELSET\s*=\s*([^,]*)"
+    material_heading_pattern = r"\*MATERIAL\s*,\s*NAME\s*=\s*([^\s]*)"
     boundary_heading_pattern = r"\*BOUNDARY"
     cload_heading_pattern = r"\*CLOAD"
     dload_heading_pattern = r"\*DLOAD"

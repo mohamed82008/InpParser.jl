@@ -1,5 +1,5 @@
 function extract_dload!(dloads::Dict{String, TF}, facesets::Dict{String, Vector{Tuple{TI,TI}}}, file, ::Type{Val{dim}}, offset::TI) where {TI, TF, dim}
-    pattern = r"(\d*),P(\d*),(\-?\d*\.\d*)"
+    pattern = r"(\d+)\s*,\s*P(\d+)\s*,\s*(\-?\d+\.\d*)"
     dload_heading_pattern = r"\*DLOAD"
 
     faceset_name = "DLOAD_SET_$(length(dloads)+1)"
