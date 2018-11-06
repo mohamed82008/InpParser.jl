@@ -1,9 +1,3 @@
-module InpParser
-
-export extract_inp, InpContent
-
-using JuAFEM
-
 struct InpContent{dim, TF, N, TI}
     node_coords::Vector{NTuple{dim,TF}}
     celltype::String
@@ -20,16 +14,6 @@ struct InpContent{dim, TF, N, TI}
 end
 
 const stopping_pattern = r"^\*[^\*]"
-
-# Import
-include(joinpath("FeatureExtractors", "extract_cells.jl"))
-include(joinpath("FeatureExtractors", "extract_cload.jl"))
-include(joinpath("FeatureExtractors", "extract_dbcs.jl"))
-include(joinpath("FeatureExtractors", "extract_dload.jl"))
-include(joinpath("FeatureExtractors", "extract_material.jl"))
-include(joinpath("FeatureExtractors", "extract_nodes.jl"))
-include(joinpath("FeatureExtractors", "extract_set.jl"))
-include(joinpath("inp_to_juafem.jl"))
 
 function extract_inp(filepath_with_ext)
     file = open(filepath_with_ext, "r")
@@ -109,6 +93,4 @@ function extract_inp(filepath_with_ext)
     close(file)
 
     return InpContent(node_coords, celltype, cells, nodesets, cellsets, E, mu, density, nodedbcs, cloads, facesets, dloads)
-end
-
 end
