@@ -119,14 +119,14 @@ function inp_to_juafem(problem::InpContent)
 end
 
 function extract_boundary_matrix(grid::Grid{dim}) where dim
-    nfaces = length(faces(grid.cells[1]))
+    nfaces = length(JuAFEM.faces(grid.cells[1]))
     ncells = length(grid.cells)
     countedbefore = Dict{NTuple{dim,Int},Bool}()
     boundary_matrix = ones(Bool, nfaces, ncells) # Assume all are boundary faces
     for (ci, cell) in enumerate(getcells(grid))    
-        for (fi, face) in enumerate(faces(cell))
-            sface = sortface(face) # TODO: faces(cell) may as well just return the sorted list
-            token = ht_keyindex2!(countedbefore, sface)
+        for (fi, face) in enumerate(JuAFEM.faces(cell))
+            sface = JuAFEM.sortface(face) # TODO: faces(cell) may as well just return the sorted list
+            token = Base.ht_keyindex2!(countedbefore, sface)
             if token > 0 # haskey(countedbefore, sface)
                 boundary_matrix[fi, ci] = 0
             else # distribute new dofs

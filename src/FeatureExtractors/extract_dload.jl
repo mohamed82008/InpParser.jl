@@ -7,11 +7,11 @@ function extract_dload!(dloads::Dict{String, TF}, facesets::Dict{String, Vector{
 
     first = true
     prevload = zero(TF)
-    local load
+    load = zero(TF)
     
     line = readline(file)
     m = match(stopping_pattern, line)
-    while m isa Void
+    while m isa Nothing
         m = match(dload_heading_pattern, line)
         if m != nothing
             dloads[faceset_name] = load

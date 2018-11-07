@@ -2,7 +2,7 @@ function extract_cload!(cloads::Dict{TI, Vector{TF}}, file, ::Type{Val{dim}}) wh
     pattern = r"(\d+)\s*,\s*(\d)\s*,\s*(\-?\d+\.\d*E[\+\-]\d{2})"
     line = readline(file)
     m = match(stopping_pattern, line)
-    while m isa Void
+    while m isa Nothing
         m = match(pattern, line)
         if m != nothing
             nodeidx = parse(TI, m[1])

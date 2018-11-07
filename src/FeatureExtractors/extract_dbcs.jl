@@ -4,7 +4,7 @@ function extract_nodedbcs!(node_dbcs::Dict{String, Vector{Tuple{TI,TF}}}, file) 
     pattern_other = r"([^,]+)\s*,\s*(\d)\s*,\s*(\d)\s*,\s*(\-?\d+\.\d*)"
     line = readline(file)
     m = match(stopping_pattern, line)
-    while m isa Void
+    while m isa Nothing
         m = match(pattern_other, line)
         if m != nothing
             nodesetname = m[1]

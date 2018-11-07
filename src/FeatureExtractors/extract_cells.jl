@@ -24,7 +24,7 @@ function _extract_cells!(cells::AbstractVector{NTuple{nnodes, TI}}, file, prev_c
 
     line = readline(file)
     m = match(stopping_pattern, line)
-    while m isa Void
+    while m isa Nothing
         m = match(cell_idx_pattern, line)
         if m != nothing
             cell_idx = parse(TI, m[1])

@@ -1,8 +1,8 @@
 module InpParser
 
-export extract_inp, InpContent
+using JuAFEM, SparseArrays
 
-using JuAFEM
+export extract_inp, InpContent
 
 struct InpContent{dim, TF, N, TI}
     node_coords::Vector{NTuple{dim,TF}}
@@ -55,6 +55,7 @@ function extract_inp(filepath_with_ext)
     dload_heading_pattern = r"\*DLOAD"
 
     line = readline(file)
+    local dim
     while !eof(file)
         m = match(node_heading_pattern, line)
         if m != nothing && m[1] == "Nall"

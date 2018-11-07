@@ -7,7 +7,7 @@ function extract_nodes(file, ::Type{TF}=Float64, ::Type{TI}=Int) where {TF, TI}
     first_node_idx = parse(TI, m[1])
     first_node_idx == TI(1) || throw("First node index is not 1.")
 
-    if m[6] isa Void
+    if m[6] isa Nothing
         node_coords = [(parse(TF, m[2]), parse(TF, m[4]))]
         nextline = _extract_nodes!(node_coords, file, TI(1))
     else
@@ -28,7 +28,7 @@ function _extract_nodes!(node_coords::AbstractVector{NTuple{dim, TF}}, file, pre
 
     line = readline(file)
     m = match(stopping_pattern, line)
-    while m isa Void
+    while m isa Nothing
         m = match(pattern, line)
         if m != nothing
             node_idx = parse(Int, m[1])
